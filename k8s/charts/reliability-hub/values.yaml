@@ -1,0 +1,42 @@
+# Default values for reliability-hub.
+# This is a YAML-formatted file.
+
+replicaCount: 1
+
+image:
+  repository: reliability-hub
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8003
+
+# Internal database configuration (if using a sidecar or subchart)
+postgresql:
+  enabled: true
+  auth:
+    username: user
+    password: password
+    database: reliabilityhub
+
+# The full connection string for the database.
+# Note: This is stored in a Kubernetes Secret (see secret.yaml)
+databaseUrl: "postgresql://user:password@reliability-hub-postgresql:5432/reliabilityhub"
+
+ingress:
+  enabled: false
+  annotations: {}
+  hosts:
+    - host: reliability-hub.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
+resources: {}
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
